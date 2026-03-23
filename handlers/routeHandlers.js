@@ -3,6 +3,7 @@ import { getIncomingData } from "../utils/getIncomingData.js";
 import { addData } from "../utils/addData.js";
 import { getData } from "../utils/getData.js";
 import { sanitizeData } from "../utils/sanitizeData.js";
+import { event } from "../events/events.js";
 
 const data = await getData();
 // handleGet
@@ -16,6 +17,7 @@ export const handlePost = async (req, res) => {
     const incomingData = await getIncomingData(req);
     const sanitizedData = sanitizeData(incomingData);
     await addData(data, sanitizedData);
+    event.emit("sighting-added", sanitizedData);
     sendResponse(res, 201, "application/json", JSON.stringify(sanitizedData));
   } catch (error) {
     sendResponse(
