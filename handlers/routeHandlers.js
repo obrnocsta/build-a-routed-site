@@ -2,6 +2,7 @@ import { sendResponse } from "../utils/sendResponse.js";
 import { getIncomingData } from "../utils/getIncomingData.js";
 import { addData } from "../utils/addData.js";
 import { getData } from "../utils/getData.js";
+import { sanitizeData } from "../utils/sanitizeData.js";
 
 const data = await getData();
 // handleGet
@@ -13,8 +14,9 @@ export const handleGet = async (req, res) => {
 export const handlePost = async (req, res) => {
   try {
     const incomingData = await getIncomingData(req);
-    await addData(data, incomingData);
-    sendResponse(res, 201, "application/json", JSON.stringify(incomingData));
+    const sanitizedData = sanitizeData(incomingData);
+    await addData(data, sanitizedData);
+    sendResponse(res, 201, "application/json", JSON.stringify(sanitizedData));
   } catch (error) {
     sendResponse(
       res,
